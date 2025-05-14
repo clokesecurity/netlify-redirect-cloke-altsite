@@ -1,12 +1,12 @@
 # netlify-redirect-cloke-altsite
 
-Below is a step‑by‑step field‑guide for parking an alternative domain on **Netlify** and having it issue a clean, SEO‑friendly **301** to your canonical site—all while keeping the nameservers at Namecheap and paying nothing beyond Netlify’s Free tier.
+Below is a step‑by‑step field‑guide for parking an alternative domain on **Netlify** and having it issue a clean, SEO‑friendly **301** to your canonical site—all while keeping the nameservers at Registrar and paying nothing beyond Netlify’s Free tier.
 
 ---
 
 ## Quick‑look summary
 
-Create a “redirect‑only” Netlify site that contains nothing but a `_redirects` file instructing the edge to send every request to `https://your‑main.com`. Add your alt domain to the site, then point DNS at Netlify (CNAME for `www`, ALIAS/ANAME or an A‑record for the apex). Netlify provisions a free Let’s Encrypt cert automatically, so both HTTP and HTTPS visitors get an instant 301. You stay on Namecheap DNS; no Cloudflare required. ([Netlify][1], [Netlify][2], [Netlify][3])
+Create a “redirect‑only” Netlify site that contains nothing but a `_redirects` file instructing the edge to send every request to `https://your‑main.com`. Add your alt domain to the site, then point DNS at Netlify (CNAME for `www`, ALIAS/ANAME or an A‑record for the apex). Netlify provisions a free Let’s Encrypt cert automatically, so both HTTP and HTTPS visitors get an instant 301. ([Netlify][1], [Netlify][2], [Netlify][3])
 
 ---
 
@@ -42,15 +42,15 @@ Open the site → **Domain management → Add domain → Domain you a
 
 ---
 
-## 4 · Point DNS at Netlify (stay on Namecheap)
+## 4 · Point DNS at Netlify
 
-| Case                                    | Record to add in Namecheap                     | Points to                       | Notes                                                                                        |
+| Case                                    | Record to add in Registrar                     | Points to                       | Notes                                                                                        |
 | --------------------------------------- | ---------------------------------------------- | ------------------------------- | -------------------------------------------------------------------------------------------- |
 | **`www` or any sub‑domain**             | **CNAME** `www.alt-domain.tld`                 | `your‑site.netlify.app`         | Sub‑domains can always use CNAME. ([Netlify][3])                                             |
 | **Apex/root domain** (`alt-domain.tld`) | **Preferred**: ALIAS / ANAME / flattened CNAME | `apex-loadbalancer.netlify.com` | Works only if DNS provider supports those pseudo‑records. ([Netlify][3])                     |
 |                                         | **Fallback**: **A** record                     | `75.2.60.5`                     | Netlify’s load‑balancer IP. (A second IP is returned via DNS for redundancy.) ([Netlify][3]) |
 
-> **Propagation tip:** both Netlify and Namecheap caches can take up to 24 h; running `dig +short alt-domain.tld` until it shows the Netlify value confirms the switch. ([Netlify][3])
+> **Propagation tip:** both Netlify and Registrar caches can take up to 24 h; running `dig +short alt-domain.tld` until it shows the Netlify value confirms the switch. ([Netlify][3])
 
 ---
 
@@ -82,15 +82,15 @@ For a parked domain with only one wildcard rule, you are effectively operating a
 
 ---
 
-## 8 · Why choose Netlify over Namecheap’s built‑in redirect?
+## 8 · Why choose Netlify over Registrar's built‑in redirect?
 
-* **HTTPS support:** Namecheap’s forwarder has no cert for your domain, so HTTPS breaks; Netlify issues one automatically. ([Netlify][2])
+* **HTTPS support:** Registrar's forwarder has no cert for your domain, so HTTPS breaks; Netlify issues one automatically. ([Netlify][2])
 * **Edge performance:** Redirect is served from Netlify’s global CDN Pops. ([CSS-Tricks][8])
 * **Git‑ops workflow:** Rule lives in source control; future updates are one commit. ([CSS-Tricks][12])
 
 ---
 
-### That’s all there is: a one‑line `_redirects` file, a quick deploy, and two DNS records. You’ve now got a zero‑maintenance, SSL‑clean 301 for every visit hitting your alternative domain—and you never had to move the domain off Namecheap or pay Cloudflare a cent.
+### That’s all there is: a one‑line `_redirects` file, a quick deploy, and two DNS records. You’ve now got a zero‑maintenance, SSL‑clean 301 for every visit hitting your alternative domain—and you never had to move the domain off Registrar.
 
 [1]: https://docs.netlify.com/routing/redirects/?utm_source=chatgpt.com "Redirects and rewrites | Netlify Docs"
 [2]: https://docs.netlify.com/domains/secure-domains-with-https/https-ssl/?utm_source=chatgpt.com "HTTPS (SSL) | Netlify Docs"
